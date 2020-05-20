@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 class plotManipulator:
 
     def __init__(self, *args, **kwargs):
+        """Init function, csv file is loaded here and split into sample"""
+        """ALso metada are stored and can be use later."""
+        """Number of rows is also cut from all blank lines"""
         self.file = pd.read_csv(args[0], header=1, delimiter=",")
         rng = [2 * n for n in range(1, len(self.file.columns) // 2)]
         self.dfs = np.split(self.file, rng, axis=1)
@@ -18,13 +21,9 @@ class plotManipulator:
             pom_cela = pom.iloc[:index]
             self.meta_data.append(pom.iloc[index:])
             self.dfs[n] = pd.DataFrame(pom_cela)
-            try:
-                self.dfs[n].plot(x="Abs", y="Wavelength (nm)")
-            except:
-                self.dfs[n] = self.dfs[0].astype(float)
-                self.dfs[n].plot(x="Abs", y="Wavelength (nm)")
 
     def which_samples(self):
+        """Function for determine which sample wants to choose. Accept integer"""
         print("Input number of sample which you want to use for plot.\n")
         while True:
             self.sample = input()
@@ -36,6 +35,8 @@ class plotManipulator:
                 continue
 
     def which_lines(self):
+        """Function for determine which interval wants to choose."""
+        """ Accept integer and strin all(Not Case Sensitive). And prepare to plot"""
         print("Input interval of lines which you want to plot, separated by ',' ."
               "If you want to use all lines type all.\n")
 
@@ -56,5 +57,11 @@ class plotManipulator:
                 continue
 
     def plot_Graph(self):
-        self.to_plot.plot(x="Abs", y="Wavelength (nm)")
-        plt.show()
+        """Function for plotting"""
+        try:
+            self.to_plot.plot(x="Abs", y="Wavelength (nm)")
+            plt.show()
+        except:
+            self.to_plot = self.to_plot.astype(float)
+            self.to_plot.plot(x="Abs", y="Wavelength (nm)")
+            plt.show()
